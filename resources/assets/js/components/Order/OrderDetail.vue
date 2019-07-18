@@ -5,8 +5,13 @@
                 <p class="info">感谢您在iMall购物，欢迎您再次光临！</p>
             </div>
             <div class="detail-container">
-                <p v-show="order.pay_status === '未支付'"><span class="title">状态：</span>{{order.pay_status}}</p>
-                <p v-show="order.pay_status === '已支付'"><span class="title">状态：</span>{{order.ship_status}}</p>
+                <div v-if="order.order_status === '10'">
+                    <p v-show="order.pay_status === '未支付'"><span class="title">状态：</span>{{order.pay_status}}</p>
+                    <p v-show="order.pay_status === '已支付'"><span class="title">状态：</span>{{order.ship_status}}</p>
+                </div>
+                <div v-else>
+                    <p><span class="title">状态：</span>{{order.order_status}}</p>
+                </div>
                 <p><span class="title">订单编号：</span>{{order.order_number}}</p>
                 <p><span class="title">下单时间：</span>{{order.created_at}}</p>
             </div>
@@ -62,14 +67,29 @@
             </div>
         </div>
     </div>
+    <div id="btn-groups-container" v-if="order.pay_status == '已支付'">
+        <div id="btn-groups-container" v-if="order.ship_status == '已收货'">
+            <div class="add-cart-btn" @click="afterSale">售后</div>
+            <div class="to-pay-btn" @click="evaluation" >评价</div>
+        </div>
+        <div id="btn-groups-container" v-else>
+            <div class="add-cart-btn" @click="refund">退款</div>
+            <div class="to-pay-btn" @click="toReceive">确认收货</div>
+        </div>
+    </div>
+    <div id="btn-groups-container" v-else>
+        <div class="add-cart-btn" @click="cancelOrder">取消订单</div>
+        <div class="to-pay-btn" @click="toPay">支付</div>
+    </div>
 </template>
 
+s
 <script>
     import { Indicator, Toast } from 'mint-ui';
     export default{
         data(){
             return {
-                order:{}
+                order:{},
             }
         },
         components:{
@@ -94,6 +114,75 @@
                         vm.$set('order',response.data.message);
                     }
                 });
+            },
+            //确认收货
+            toReceive:function () {
+                let vm = this;
+                let itemId = this.$route.params.hashid;
+                Indicator.open();
+                vm.$http.post('/api/orderreceive/'+itemId).then(response=>{
+                    if(response.data.code == -1){
+                        Toast({
+                            message:response.data.message
+                        });
+                    }
+                    Indicator.close();
+                    if(response.data.code == 0){
+                        Toast({
+                            message:response.data.message
+                        });
+                    }
+                });
+            },
+            //支付订单
+            toPay:function () {
+                let commodity = this.commodity.id+ '-' + this.commodity_num;
+                let order = {from:'default',commodity:commodity};
+                this.$route.router.go({name:'order-settle',query:order})
+            },
+            //取消订单
+            cancelOrder:function () {
+                let vm = this;
+                let itemId = this.$route.params.hashid;
+                Indicator.open();
+                vm.$http.post('/api/ordercancel/'+itemId).then(response=>{
+                    if(response.data.code == -1){
+                        Toast({
+                            message:response.data.message
+                        });
+                    }
+                    Indicator.close();
+                    if(response.data.code == 0){
+                        Toast({
+                            message:response.data.message
+                        });
+                    }
+                });
+            },
+            //退款
+            refund:function () {
+
+            },
+            //评价
+            evaluation:function () {
+                let vm = this;
+                let itemId = this.$route.params.hashid;
+                Indicator.open();
+                vm.$http.get('/api/testcomment/'+itemId).then(response=>{
+                    if(response.data.code == -1){
+                        Toast({
+                            message:'你已评价过该订单'
+                        });
+                    }
+                    Indicator.close();
+                    if(response.data.code == 0){
+                        vm.$route.router.go({name:'comment',params:{'hashid':itemId}});
+                    }
+                });
+            },
+            //售后
+            afterSale:function () {
+
             }
         }
     }

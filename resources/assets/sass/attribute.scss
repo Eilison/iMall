@@ -66,10 +66,12 @@
   .list-data-wrapper {
     margin: 10px 5px;
     background-color: #fff;
+    width: 47%;
+    float: left;
     img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 150px;
     }
     .data-info-wrapper {
       border: 1px solid #d7d7d7;

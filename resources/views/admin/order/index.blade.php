@@ -37,6 +37,8 @@
                     <tr>
                         <th>头像</th>
                         <th>订单号</th>
+                        <th>快递公司</th>
+                        <th>快递单号</th>
                         <th>支付状态</th>
                         <th>订单总价</th>
                         <th>配送状态</th>
@@ -53,6 +55,8 @@
                             <tr>
                                 <td><img class="head-img-url" src="{{$order->follow->headimgurl}}"/></td>
                                 <td>{{$order->order_number}}</td>
+                                <td>{{$order->ship_name}}</td>
+                                <td>{{$order->ship_number}}</td>
                                 <td>{{$order->pay_status}}</td>
                                 <td>&yen; {{$order->order_amount}}</td>
                                 <td>{{$order->ship_status}}</td>
@@ -62,6 +66,15 @@
                                 <td>{{$order->created_at}}</td>
                                 <td>
                                     <a href="javascript:;" data-order="{{$order->id}}" class="info-btn">查看</a>
+                                    <br>
+                                        @if($order->ship_name != '')
+                                        <a href="{{url('admin/ship/edit')}}/{{$order->id}}">修改快递</a>
+                                        <br>
+                                        <a href="{{url('admin/ship/getshipping')}}/{{$order->id}}" id="{{$order->id}}">查询物流</a>
+                                        @else
+                                        <a href="{{url('admin/ship/create')}}/{{$order->id}}" id="{{$order->id}}">发货</a>
+                                        @endif
+
                                 </td>
                             </tr>
                         @endforeach
@@ -86,7 +99,7 @@
                     <h4 class="modal-title">订单详情</h4>
                 </div>
                 <div class="modal-body">
-                    <table id="data-table" class="table table-responsive table-hover">
+                        <table id="data-table" class="table table-responsive table-hover">
                         
                     </table>
                 </div>

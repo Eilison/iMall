@@ -67,6 +67,9 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <nav class="text-center">
+                            {!! $commodities->links() !!}
+                        </nav>
                     </div>
                 </div>
             </div>

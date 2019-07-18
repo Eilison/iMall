@@ -99,6 +99,16 @@
                             <input type="radio" name="commodity_disabled" value="2"> 下架
                         </label>
                     </div>
+                    <div class="form-group">
+                        <label>商品属性：</label>
+                        @foreach($product_commodity -> getProductType() as $ind => $val)
+                            <label class="radio-inline">
+                                <input type="radio" name="commodity_type"
+                                       {{isset($product_commodity -> product_type) && $product_commodity -> product_type == $ind ? 'checked' : '' }}
+                                       value="{{$ind}}"> {{$val}}
+                            </label>
+                        @endforeach
+                    </div>
                     <button type="submit" class="btn btn-primary">保存</button>
                 </form>
             </div>

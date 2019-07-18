@@ -3,14 +3,20 @@
         <mt-tab-item id="all" v-link="{name:'order-list',params:{'type':'all'}}">全部订单</mt-tab-item>
         <mt-tab-item id="unpay" v-link="{name:'order-list',params:{'type':'unpay'}}">待付款</mt-tab-item>
         <mt-tab-item id="unreceived" v-link="{name:'order-list',params:{'type':'unreceived'}}">待收货</mt-tab-item>
+        <mt-tab-item id="received" v-link="{name:'order-list',params:{'type':'received'}}">待评价</mt-tab-item>
     </mt-navbar>
     <div id="order-list-part" v-data-scroll="loadPageData">
         <div class="order-list-container"
              v-for="order in orders"
              v-link="{name:'order-detail',params:{'hashid':order.id}}">
             <div class="order-info">
-                <p v-show="order.pay_status === '未支付'"><span class="title">状态：</span>{{order.pay_status}}</p>
-                <p v-show="order.pay_status === '已支付'"><span class="title">状态：</span>{{order.ship_status}}</p>
+                <div v-if="order.order_status === 10">
+                    <p v-show="order.pay_status === '未支付'"><span class="title">状态：</span>{{order.pay_status}}</p>
+                    <p v-show="order.pay_status === '已支付'"><span class="title">状态：</span>{{order.ship_status}}</p>
+                </div>
+                <div v-else>
+                    <p><span class="title">状态：</span>{{order.getOrderStatus(order.order_status)}}</p>
+                </div>
                 <p><span class="title">总价：</span>&yen;{{order.order_amount | transformPrice}}</p>
             </div>
             <div class="order-detail" v-for="detail in order.details">

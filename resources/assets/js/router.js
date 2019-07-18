@@ -16,6 +16,10 @@ export default function (router) {
             name: 'commodity',
             component: require('./components/Commodity/CommodityDetail.vue')
         },
+        '/:hashid/comment': {
+            name: 'comment',
+            component: require('./components/Commodity/CommodityComment.vue')
+        },
         '/cart': {
             name: 'cart',
             component: require('./components/Cart.vue')

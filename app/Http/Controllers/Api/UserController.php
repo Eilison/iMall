@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\WechatOrder;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -17,6 +18,13 @@ class UserController extends Controller
     {
         $user = session('wechat.oauth_user')->toArray();
         return response()->json($user);
+    }
+
+    public function money()
+    {
+        $follow = session()->get('wechat.oauth_user');
+        $data = WechatFollow::where('openid','=',$follow->id)->get();
+        return response()->json($data);
     }
 
     public function suggestion(Request $request)

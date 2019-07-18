@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ProductComment;
+use App\WechatOrderDetail;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -40,6 +42,17 @@ class ShopController extends Controller
             ->orderBy('id', 'asc')
             ->get();
         return response()->json($topics);
+    }
+
+
+    public function getProduct()
+    {
+        //查询推荐商品
+        $products = ProductCommodity::where('commodity_type', '=', '10')
+            ->orderBy('commodity_sort','asc')
+            ->orderBy('id','asc')
+            ->get();
+        return response()->json($products);
     }
 
     public function getCategories()
@@ -138,4 +151,6 @@ class ShopController extends Controller
         $config = ShopConfig::first();
         return response()->json($config);
     }
+
+
 }

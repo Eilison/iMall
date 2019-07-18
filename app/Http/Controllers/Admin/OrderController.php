@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\WechatOrder;
 use App\WechatOrderDetail;
+use Redrain\Express\LaravelExpress;
 
 class OrderController extends Controller
 {
@@ -54,6 +55,11 @@ class OrderController extends Controller
             ->with('follow')
             ->with('details')
             ->first();
+        $order = WechatOrder::findOrFail($id);
+        $ship_number = $order->ship_number;
+        $express = new LaravelExpress();
+        $laravelexpress = $express->getExpressInfoByNo($ship_number);
+
         $detail_html = '<td colspan="3">';
         foreach ($orderInfo->details as $detail) {
             $detail_html .= '<img class="commodity-img-url" src="' . $detail->commodity_img . '"/>';
@@ -64,7 +70,8 @@ class OrderController extends Controller
 
         print $html = <<<EOF
 <tr>
-    <th>订单号：</th>
+    <t.h>订单号：</t.
+    h>
     <td class="modal-data-1">{$orderInfo->order_number}</td>
     <th>下单时间：</th>
     <td class="modal-data-2">{$orderInfo->created_at}</td>
@@ -82,7 +89,7 @@ class OrderController extends Controller
     <td class="modal-data-6">{$orderInfo->ship_status}</td>
 </tr>
 <tr>
-    <th>物流公司：</th>
+    <th>快递公司：</th>
     <td class="modal-data-7">{$orderInfo->ship_name}</td>
     <th>物流单号：</th>
     <td class="modal-data-8">{$orderInfo->ship_number}</td>
@@ -100,6 +107,10 @@ class OrderController extends Controller
 <tr>
     <th>购物清单：</th>
     {$detail_html}
+</tr>
+<tr>
+    <th物流信息：</th>
+    <td class="modal-data-2" colspan="3">{$laravelexpress}</td>
 </tr>
 EOF;
     }

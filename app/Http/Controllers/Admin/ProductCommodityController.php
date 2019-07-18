@@ -16,7 +16,7 @@ class ProductCommodityController extends Controller
 {
     public function index()
     {
-        $commodities = ProductCommodity::paginate(8);
+        $commodities = ProductCommodity::paginate(15);
         return view('admin.product.commodity.index')->with(['commodities' => $commodities]);
     }
 
@@ -38,11 +38,12 @@ class ProductCommodityController extends Controller
 
     public function create()
     {
+        $product_commodity = new ProductCommodity();
         $categories = ProductCategory::where('parent_id', '>', 0)->orderBy('id', 'desc')->get();
         $plates = ProductPlate::where('disabled', '=', '显示')->orderBy('id', 'desc')->get();
         $topics = ProductTopic::where('disabled', '=', '显示')->orderBy('id', 'desc')->get();
         return view('admin.product.commodity.create')
-            ->with(['categories' => $categories, 'plates' => $plates, 'topics' => $topics]);
+            ->with(['product_commodity' => $product_commodity,'categories' => $categories, 'plates' => $plates, 'topics' => $topics]);
     }
 
     public function store(Request $request)
@@ -70,6 +71,7 @@ class ProductCommodityController extends Controller
             $commodity->commodity_base_info = $base_info;
         }
         $commodity->commodity_disabled = $request->input('commodity_disabled');
+        $commodity->commodity_type = $request->input('commodity_type');
         $commodity->commodity_sort = $request->input('commodity_sort');
         $commodity->topic_id = $request->input('topic_id');
         $commodity->plate_id = $request->input('plate_id');
@@ -141,6 +143,7 @@ class ProductCommodityController extends Controller
             $commodity->commodity_base_info = $base_info;
         }
         $commodity->commodity_disabled = $request->input('commodity_disabled');
+        $commodity->commodity_type = $request->input('commodity_type');
         $commodity->commodity_sort = $request->input('commodity_sort');
         $commodity->topic_id = $request->input('topic_id');
         $commodity->plate_id = $request->input('plate_id');

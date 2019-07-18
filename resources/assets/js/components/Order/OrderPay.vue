@@ -8,7 +8,7 @@
             <p>商品总价：<span class="amount">&yen;{{order.commodity_amount | transformPrice}}</span></p>
             <p>订单总价：<span class="amount">&yen;{{order.order_amount | transformPrice}}</span></p>
         </div>
-        <div class="order-pay-btn" :class="{'disabled' : !visible}">
+        <div class="order-pay-btn">
             微信支付
         </div>
     </div>
@@ -54,6 +54,7 @@
             },
             wechatPay: function(){
                 // TODO 发起支付请求
+
             }
         }
     }

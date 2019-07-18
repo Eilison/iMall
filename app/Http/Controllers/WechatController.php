@@ -57,7 +57,7 @@ class WechatController extends Controller
                             $follow['groupid'] = $user->groupid;
                             $follow['is_subscribed'] = 2;
                             WechatFollow::where('openid', '=', $openid)->update($follow);
-                            $welcome = "欢迎回来，" . $user->nickname ."\n\n进入商城闲逛一会吧，\n\n<a href=\"http://imall.lovchun.com/mall#!/index\">点击进入</a>";
+                            $welcome = "欢迎回来，" . $user->nickname ."\n\n进入商城闲逛一会吧，\n\n<a href=\"http://imall.free.idcfengye.com/mall\">点击进入</a>";
                             return $welcome;
                         } else {
                             // 录入数据库
@@ -74,7 +74,7 @@ class WechatController extends Controller
                             $follow->groupid = $user->groupid;
                             $follow->is_subscribed = 2;
                             $follow->save();
-                            $welcome = "欢迎，" . $user->nickname ."\n\n进入商城闲逛一会吧，\n\n<a href=\"http://imall.lovchun.com/mall#!/index\">点击进入</a>";
+                            $welcome = "欢迎，" . $user->nickname ."\n\n进入商城闲逛一会吧，\n\n<a href=\"http://imall.free.idcfengye.com/mall\">点击进入</a>";
                             return $welcome;
                         }
                         break;
@@ -87,7 +87,7 @@ class WechatController extends Controller
                 }
             } else {
                 $user = $userApi->get($openid);
-                $welcome = "欢迎，" . $user->nickname ."\n\n进入商城闲逛一会吧，\n\n<a href=\"http://imall.lovchun.com/mall#!/index\">点击进入</a>";
+                $welcome = "欢迎，" . $user->nickname ."\n\n进入商城闲逛一会吧，\n\n<a href=\"http://imall.free.idcfengye.com/mall\">点击进入</a>";
                 return $welcome;
             }
         });

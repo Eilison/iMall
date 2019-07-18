@@ -15,7 +15,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin
     // 公众号管理
     Route::group(['prefix' => 'wechat'], function () {
         Route::resource('info', 'WechatInfoController', ['except' => ['create', 'edit']]);
-        //Route::resource('menu', 'WechatMenuController');
+        Route::resource('menu', 'WechatMenuController');
         Route::post('pushMenu', 'WechatMenuController@pushMenu');
         Route::resource('follow', 'WechatFollowController', ['except' => ['create', 'edit', 'show', 'destroy','store']]);
         Route::put('refresh', 'WechatFollowController@refresh');
@@ -39,6 +39,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin
     });
     // 订单管理
     Route::resource('order', 'OrderController', ['except' => ['create']]);
+
+    // 增加快递公司及单号
+    Route::get('ship/create/{id}', 'ShipController@create');
+    Route::post('ship/store/{id}', 'ShipController@store');
+    Route::get('ship/edit/{id}', 'ShipController@edit');
+    Route::post('ship/update/{id}', 'ShipController@update');
+    Route::any('ship/getshipping/{id}', 'ShipController@ship');
 });
 
 // DEBUG
@@ -60,10 +67,11 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     Route::get('userinfo', 'UserController@userinfo');
     // 商铺配置
     Route::get('shopconfig', 'ShopController@shopconfig');
-    // 获取首页轮播图、专题、板块数据
+    // 获取首页轮播图、专题、板块数据和推荐商品
     Route::get('banners', 'ShopController@getBanners');
     Route::get('topics', 'ShopController@getTopics');
     Route::get('plates', 'ShopController@getPlates');
+    Route::get('products', 'ShopController@getProduct');
     // 数据分类数据
     Route::get('categories', 'ShopController@getCategories');
     // 根据不同条件获取商品数据集合
@@ -86,8 +94,16 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     Route::get('orderlist/{type}', 'OrderController@index');
     // 获取订单详情
     Route::get('orderdetail/{order}', 'OrderController@detail');
+    // 确认收货
+    Route::post('orderreceive/{order}', 'OrderController@receive');
+    // 取消订单
+    Route::post('ordercancel/{order}', 'OrderController@cancel');
     // 意见建议
     Route::post('suggestion', 'UserController@suggestion');
+    // 判断该订单是否被评价过
+    Route::get('testcomment/{id}', 'CommentController@testcomment');
+    // 商品评价
+    Route::post('comment/{id}', 'CommentController@comment');
     // 地址管理
     Route::get('address', 'UserController@indexAddress');
     Route::post('address', 'UserController@storeAddress');
@@ -95,4 +111,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     Route::put('address/{address}', 'UserController@updateAddress');
     Route::get('default/address', 'UserController@defaultAddress');
     Route::delete('address/{address}', 'UserController@deleteAddress');
+
+    //获取余额
+    Route::get('money', 'UserController@money');
 });

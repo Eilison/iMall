@@ -142,6 +142,14 @@ class OrderController extends Controller
                     ->orderBy('id', 'desc')
                     ->paginate($page_size);
                 break;
+            case 'received':
+                $orders = WechatOrder::with('details')
+                    ->where('openid', '=', $openid)
+                    ->where('pay_status', '=', '已支付')
+                    ->whereIn('ship_status', ['已收货'])
+                    ->orderBy('id', 'desc')
+                    ->paginate($page_size);
+                break;
             default:
                 break;
         }
@@ -164,6 +172,41 @@ class OrderController extends Controller
             return response()->json([
                 'code' => -1,
                 'message' => '订单不存在'
+            ]);
+        }
+    }
+
+    public function receive($id)
+    {
+        $order = WechatOrder::findOrFail($id);
+        if ($order->ship_status = '未收货'){
+            $order->ship_status = '已收货';
+            $order->save();
+            return response()->json([
+                'code' => 0,
+                'message' => '已经确认收货'
+            ]);
+        }else{
+            return response()->json([
+                'code' => -1,
+                'message' => '该订单已经收货'
+            ]);
+        }
+    }
+
+    public function cancel($id)
+    {
+        $order = WechatOrder::findOrFail($id);
+        $order->order_status = 20;
+        if ($order->save()){
+            return response()->json([
+                'code' => 0,
+                'message' => '取消订单成功'
+            ]);
+        }else{
+            return response()->json([
+                'code' => -1,
+                'message' => '取消订单失败'
             ]);
         }
     }
