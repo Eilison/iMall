@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin
     });
     // 订单管理
     Route::resource('order', 'OrderController', ['except' => ['create']]);
+    //确认订单退款
+    Route::get('order/refunded/{id}', 'OrderController@refunded');
 
     // 增加快递公司及单号
     Route::get('ship/create/{id}', 'ShipController@create');
@@ -94,16 +96,22 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     Route::get('orderlist/{type}', 'OrderController@index');
     // 获取订单详情
     Route::get('orderdetail/{order}', 'OrderController@detail');
+    // 订单支付（余额）
+    Route::post('orderpay/{order}', 'OrderController@orderpay');
     // 确认收货
     Route::post('orderreceive/{order}', 'OrderController@receive');
     // 取消订单
     Route::post('ordercancel/{order}', 'OrderController@cancel');
-    // 意见建议
-    Route::post('suggestion', 'UserController@suggestion');
+    // 订单退款（用户）
+    Route::post('orderrefunding/{order}', 'OrderController@refunding');
     // 判断该订单是否被评价过
     Route::get('testcomment/{id}', 'CommentController@testcomment');
-    // 商品评价
+    // 订单评价
     Route::post('comment/{id}', 'CommentController@comment');
+    // 获取商品评价
+    Route::get('getcomment/{id}', 'CommentController@getcomment');
+    // 意见建议
+    Route::post('suggestion', 'UserController@suggestion');
     // 地址管理
     Route::get('address', 'UserController@indexAddress');
     Route::post('address', 'UserController@storeAddress');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\WechatFollow;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -23,21 +24,31 @@ class OrderController extends Controller
             ->where(function ($query) use ($status) {
                 switch ($status) {
                     case 'unpay':
-                        $query->where('pay_status', '=', '未支付');
+                        $query->where('order_status', '=', 10)
+                            ->where('pay_status', '=', '未支付');
                         break;
                     case 'shiped':
-                        $query->where('pay_status', '=', '已支付')
+                        $query->where('order_status', '=', 10)
+                            ->where('pay_status', '=', '已支付')
                             ->where('ship_status', '=', '已发货');
                         break;
                     case 'received':
-                        $query->where('pay_status', '=', '已支付')
+                        $query->where('order_status', '=', 10)
+                            ->where('pay_status', '=', '已支付')
                             ->where('ship_status', '=', '已收货');
+                        break;
+                    case 'refunding':
+                        $query->where('order_status', '=', 30);
+                        break;
+                    case 'refunded':
+                        $query->where('order_status', '=', 40);
                         break;
                     case 'closed':
                         // TODO 暂未实现关闭订单功能
                         break;
                     default:
-                        $query->where('pay_status', '=', '已支付')
+                        $query->where('order_status', '=', 10)
+                            ->where('pay_status', '=', '已支付')
                             ->where('ship_status', '=', '未发货');
                         break;
                 }
@@ -137,4 +148,23 @@ EOF;
     {
         //
     }
+
+    public function refunded($id)
+    {
+        $order = WechatOrder::findOrFail($id);
+        $order_amount = $order->order_amount;
+        $openid = $order->openid;
+        if ($order->order_status = 30){
+            $order->order_status = 40;
+            if ($order->save()){
+                $follow = WechatFollow::where('openid','=',$openid)->first();
+                $money = $follow->money;
+                $follow->money = $money + $order_amount;
+                $follow->save();
+                return redirect()->back()->withSuccess('退款成功！');;
+            }
+        }
+
+    }
+
 }

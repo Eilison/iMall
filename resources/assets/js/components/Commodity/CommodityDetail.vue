@@ -28,14 +28,17 @@
             </li>
             <li @click="detailToggle"
                 :class=" detailVisible ? '' : 'active' ">
-                商品简介
+                商品评价
             </li>
         </ul>
         <div class="detail-wrap" v-show="detailVisible">
             {{{commodity.commodity_detail_info}}}
         </div>
         <div class="base-wrap" v-show="!detailVisible">
-            {{{commodity.commodity_base_info | rnTransform}}}
+            <div v-for="comment in comments">
+                <p>{{comment.nickname}}:</p>
+                <p>{{comment.content}}</p>
+            </div>
         </div>
     </div>
     <div style="width:100%;height:60px;"></div>
@@ -70,6 +73,7 @@
         data(){
             return {
                 commodity:'',
+                comments:{},
                 sheetVisible:false,
                 detailVisible:true,
                 commodity_num:1,
@@ -81,6 +85,7 @@
         },
         created(){
             this.fetchCommodity();
+            this.fetchComment();
         },
         methods:{
             fetchCommodity:function(){
@@ -140,6 +145,24 @@
                 let commodity = this.commodity.id+ '-' + this.commodity_num;
                 let order = {from:'default',commodity:commodity};
                 this.$route.router.go({name:'order-settle',query:order});
+            },
+
+            fetchComment:function () {
+                Indicator.open();
+                let vm = this;
+                let itemId = vm.$route.params.hashid;
+                vm.$http.get('/api/getcomment/'+itemId).then(function(response){
+                    Indicator.close();
+                    if(response.data.code == 0){
+                        let comments = response.data.message;
+                        console.log(comments);
+                        vm.$set('comments',comments);
+                    }else{
+                        Toast({
+                            message: response.data.message
+                        });
+                    }
+                });
             }
         }
     }

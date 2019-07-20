@@ -63,4 +63,5 @@ class HomeController extends BaseController
             return Redirect::action('Auth\AuthController@showLoginForm');
         }
     }
+
 }

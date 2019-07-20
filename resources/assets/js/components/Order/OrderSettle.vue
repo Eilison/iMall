@@ -179,7 +179,7 @@
                 vm.$http.post('/api/order',data).then(response=>{
                     Indicator.close();
                     if(response.data.code == 0){
-                        vm.$route.router.go({name:'orderpay',params:{'hashid':response.data.message}});
+                        vm.$route.router.go({name:'order-paystyle',params:{'hashid':response.data.message}});
                     }else{
                         Toast({
                           message: response.data.message

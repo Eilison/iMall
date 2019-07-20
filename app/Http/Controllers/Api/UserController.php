@@ -23,7 +23,7 @@ class UserController extends Controller
     public function money()
     {
         $follow = session()->get('wechat.oauth_user');
-        $data = WechatFollow::where('openid','=',$follow->id)->get();
+        $data = WechatFollow::where('openid','=',$follow->id)->first();
         return response()->json($data);
     }
 

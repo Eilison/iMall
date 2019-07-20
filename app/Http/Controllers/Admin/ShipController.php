@@ -26,13 +26,12 @@ class ShipController extends Controller
         $order = WechatOrder::findOrFail($id);
         $validator = Validator::make($request->all(), [
             'ship_name' => 'required',
-            'ship_number' => 'required|integer',
+
         ],[
             'required' => ':attribute为必填项',
-            'integer' => ':attribute请填写整数',
         ],[
             'ship_name' => '快递公司',
-            'ship_number' => '快递单号',
+
         ]);
         if ($validator->fails())
         {

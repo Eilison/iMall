@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\WechatFollow;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -130,6 +131,7 @@ class OrderController extends Controller
             case 'unpay':
                 $orders = WechatOrder::with('details')
                     ->where('openid', '=', $openid)
+                    ->where('order_status','=',10)
                     ->where('pay_status', '=', '未支付')
                     ->orderBy('id', 'desc')
                     ->paginate($page_size);
@@ -137,6 +139,7 @@ class OrderController extends Controller
             case 'unreceived':
                 $orders = WechatOrder::with('details')
                     ->where('openid', '=', $openid)
+                    ->where('order_status','=',10)
                     ->where('pay_status', '=', '已支付')
                     ->whereIn('ship_status', ['未发货', '已发货'])
                     ->orderBy('id', 'desc')
@@ -145,6 +148,7 @@ class OrderController extends Controller
             case 'received':
                 $orders = WechatOrder::with('details')
                     ->where('openid', '=', $openid)
+                    ->where('order_status','=',10)
                     ->where('pay_status', '=', '已支付')
                     ->whereIn('ship_status', ['已收货'])
                     ->orderBy('id', 'desc')
@@ -176,6 +180,41 @@ class OrderController extends Controller
         }
     }
 
+    //订单支付（余额）
+    public function orderpay($id)
+    {
+        $order = WechatOrder::findOrFail($id);
+        $order_amount = $order->order_amount;
+        $follow = session()->get('wechat.oauth_user');
+        $wecaht_follow = WechatFollow::where('openid','=',$follow->id)->first();
+        $follow_money = $wecaht_follow->money;
+        if ($order_amount > $follow_money){
+            return response()->json([
+                'code' => -1,
+                'message' => '你的余额不足'
+            ]);
+        }else{
+            $wecaht_follow->money = $follow_money - $order_amount;
+            if ($wecaht_follow->save()){
+                $order->pay_status = '已支付';
+                $order->save();
+                return response()->json([
+                    'code' => 0,
+                    'message' => '支付成功'
+                ]);
+            }else{
+                return response()->json([
+                    'code' => -1,
+                    'message' => '支付失败'
+                ]);
+            }
+
+        }
+
+
+    }
+
+    //确认收货
     public function receive($id)
     {
         $order = WechatOrder::findOrFail($id);
@@ -193,7 +232,7 @@ class OrderController extends Controller
             ]);
         }
     }
-
+    //取消订单
     public function cancel($id)
     {
         $order = WechatOrder::findOrFail($id);
@@ -208,6 +247,30 @@ class OrderController extends Controller
                 'code' => -1,
                 'message' => '取消订单失败'
             ]);
+        }
+    }
+    //退款
+    public function refunding($id)
+    {
+        $order = WechatOrder::findOrFail($id);
+        if ($order->order_status = 30){
+            return response()->json([
+                'code' => -1,
+                'message' => '你已经申请过退款了'
+            ]);
+        }else{
+            $order->order_status = 30;
+            if ($order->save()){
+                return response()->json([
+                    'code' => 0,
+                    'message' => '订单申请退款成功'
+                ]);
+            }else{
+                return response()->json([
+                    'code' => -1,
+                    'message' => '订单申请退款失败'
+                ]);
+            }
         }
     }
 

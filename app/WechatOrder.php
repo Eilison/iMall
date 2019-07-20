@@ -13,7 +13,9 @@ class WechatOrder extends Model
     const STATUS_1 = 10;//正常
     const STATUS_2 = 20;//取消订单
     const STATUS_3 = 30;//退款中
-    const STATUS_4 = 40;//售后服务
+    const STATUS_4 = 40;//已退款
+    const STATUS_5 = 50;//售后中
+    const STATUS_6 = 60;//已售后
 
     public function getOrderStatus($ind = null)
     {
@@ -21,7 +23,9 @@ class WechatOrder extends Model
             self::STATUS_1 => '正常',
             self::STATUS_2 => '取消订单',
             self::STATUS_3 => '退款中',
-            self::STATUS_4 => '售后服务',
+            self::STATUS_4 => '已退款',
+            self::STATUS_5 => '售后中',
+            self::STATUS_6 => '已售后',
         ];
 
         if ($ind !== null){

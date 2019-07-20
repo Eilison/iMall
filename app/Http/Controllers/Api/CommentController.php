@@ -49,4 +49,15 @@ class CommentController extends Controller
             ]);
         }
     }
+
+    public function getcomment($id)
+    {
+        $comments = ProductComment::where('commodity_id','=',$id)
+            ->orderBy('created_at','asc')
+            ->get();
+        return response()->json([
+            'code' => 0,
+            'message' => $comments
+        ]);
+    }
 }

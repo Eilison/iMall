@@ -5,7 +5,7 @@
     </header>
     <section id="uc-nav-container">
         <div class="nav-wrapper">
-            <mt-cell title="余额">&yen;{{user}}
+            <mt-cell title="余额">&yen;{{data.money}}
                 <img slot="icon" src="/images/icon/uc-address.png" width="24" height="24">
             </mt-cell>
         </div>
