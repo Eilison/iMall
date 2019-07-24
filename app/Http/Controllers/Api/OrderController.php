@@ -253,7 +253,7 @@ class OrderController extends Controller
     public function refunding($id)
     {
         $order = WechatOrder::findOrFail($id);
-        if ($order->order_status = 30){
+        if ($order->order_status == 30){
             return response()->json([
                 'code' => -1,
                 'message' => '你已经申请过退款了'

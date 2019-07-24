@@ -66,10 +66,19 @@
                 </li>
 
                 <li class="{{ request()->is('admin/order*') ? 'active' : '' }}">
-                    <a href="{{url('admin/order')}}">
+                    <a href="#">
                         <i class="fa fa-align-justify"></i>
                         <span class="nav-label">订单管理</span>
+                        <span class="fa arrow"></span>
                     </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="{{request()->is('admin/order*') ? 'active' : ''}}">
+                            <a href="{{url('admin/order')}}">订单</a>
+                        </li>
+                        <li class="{{request()->is('admin/order*') ? 'active' : ''}}">
+                            <a href="{{url('admin/order/getreturn')}}">售后服务</a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="{{request()->is('admin/product/*') ? 'active' : ''}}">

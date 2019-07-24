@@ -136,6 +136,7 @@ s
                         Toast({
                             message:response.data.message
                         });
+                        vm.$route.router.go({name:'order-list',params:{'type':'received'}});
                     }
                 });
             },
@@ -165,6 +166,7 @@ s
                         Toast({
                             message:response.data.message
                         });
+                        vm.$route.router.go({name:'order-list',params:{'type':'all'}});
                     }
                 });
             },
@@ -173,7 +175,7 @@ s
                 let vm = this;
                 let itemId = this.$route.params.hashid;
                 Indicator.open();
-                vm.$http.post('/api/orderrefunding/'+itemId).then(response=>{
+                vm.$http.get('/api/orderrefunding/'+itemId).then(response=>{
                     if(response.data.code == -1){
                         Toast({
                             message:response.data.message
@@ -184,6 +186,7 @@ s
                         Toast({
                             message:response.data.message
                         });
+                        vm.$route.router.go({name:'order-list',params:{'type':'all'}});
                     }
                 });
             },
@@ -206,7 +209,20 @@ s
             },
             //售后
             afterSale:function () {
-
+                let vm = this;
+                let itemId = this.$route.params.hashid;
+                Indicator.open();
+                vm.$http.get('/api/testreturn/'+itemId).then(response=>{
+                    if(response.data.code == -1){
+                        Toast({
+                            message:'你已申请过售后服务了'
+                        });
+                    }
+                    Indicator.close();
+                    if(response.data.code == 0){
+                        vm.$route.router.go({name:'order-return',params:{'hashid':itemId}});
+                    }
+                });
             },
 
             orderStatus:function (status) {

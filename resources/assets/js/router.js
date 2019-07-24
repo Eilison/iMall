@@ -82,6 +82,10 @@ export default function (router) {
             name: 'order-paystyle',
             component: require('./components/Order/OrderPayStyle.vue')
         },
+        '/:hashid/orderreturn': {
+            name: 'order-return',
+            component: require('./components/Order/OrderReturn.vue')
+        },
         '/suggestion': {
             name: "suggestion",
             component: require('./components/Suggestion/Suggestion.vue')

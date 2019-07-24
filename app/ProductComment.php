@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProductComment extends Model
 {
     protected $table = 'product_comments';
+
+    public function commodity(){
+        return $this->belongsTo('App\ProductCommodity','commodity_id');
+    }
 }

@@ -48,7 +48,7 @@
                         Toast({
                             message: response.data.message
                         });
-                        vm.$router.go('/order-list');
+                        vm.$route.router.go({name:'order-list',params:{'type':'all'}});
                     }else{
                         Toast({
                             message: response.data.message

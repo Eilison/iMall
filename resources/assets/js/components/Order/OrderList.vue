@@ -87,6 +87,7 @@
                 let triggerDistance = 100;
                 let distance = document.querySelector("#order-list-part").getBoundingClientRect().bottom - window.innerHeight;
                 if(!vm.isLoading && !vm.isEnd && vm.paginate.data.length && distance < triggerDistance){
+                    debugger
                     vm.$set('isLoading',true);
                     vm.$http.get('/api/orderlist/'+vm.order_type+'?page='+page).then(response=>{
                         if(response.data.message.data.length === 0){

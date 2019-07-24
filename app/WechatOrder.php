@@ -42,4 +42,8 @@ class WechatOrder extends Model
     public function follow(){
         return $this->belongsTo('App\WechatFollow','openid','openid');
     }
+
+    public function returns(){
+        return $this->belongsTo('App\ProductReturn','id','order_id');
+    }
 }

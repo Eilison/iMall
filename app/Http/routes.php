@@ -37,9 +37,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin
         // 富文本编辑器上传图片
         Route::post('editorUpload', 'ProductCommodityController@editorUpload');
     });
+    // 售后订单
+    Route::get('order/getreturn', 'OrderController@getreturn');
+    // 同意售后
+    Route::get('order/toreturn/{id}', 'OrderController@toreturn');
     // 订单管理
     Route::resource('order', 'OrderController', ['except' => ['create']]);
-    //确认订单退款
+    // 确认订单退款
     Route::get('order/refunded/{id}', 'OrderController@refunded');
 
     // 增加快递公司及单号
@@ -103,7 +107,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     // 取消订单
     Route::post('ordercancel/{order}', 'OrderController@cancel');
     // 订单退款（用户）
-    Route::post('orderrefunding/{order}', 'OrderController@refunding');
+    Route::get('orderrefunding/{order}', 'OrderController@refunding');
     // 判断该订单是否被评价过
     Route::get('testcomment/{id}', 'CommentController@testcomment');
     // 订单评价
@@ -119,7 +123,10 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     Route::put('address/{address}', 'UserController@updateAddress');
     Route::get('default/address', 'UserController@defaultAddress');
     Route::delete('address/{address}', 'UserController@deleteAddress');
-
-    //获取余额
+    // 获取余额
     Route::get('money', 'UserController@money');
+    // 判断是否申请了售后
+    Route::get('testreturn/{id}', 'ReturnController@testreturn');
+    // 保存退货原因
+    Route::post('return/{id}', 'ReturnController@storeReturn');
 });

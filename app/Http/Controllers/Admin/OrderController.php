@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ProductReturn;
 use App\WechatFollow;
 use Illuminate\Http\Request;
 
@@ -53,7 +54,6 @@ class OrderController extends Controller
                         break;
                 }
             })->paginate(5);
-
         return view('admin.order.index')->with([
             'data' => $data,
             'status' => $status,
@@ -161,10 +161,50 @@ EOF;
                 $money = $follow->money;
                 $follow->money = $money + $order_amount;
                 $follow->save();
-                return redirect()->back()->withSuccess('退款成功！');;
+                return redirect()->back()->withSuccess('退款成功！');
             }
         }
 
+    }
+
+    public function getreturn(Request $request)
+    {
+        $return = new ProductReturn();
+        $status = empty($request->input('status')) ? 'returning' : $request->input('status');
+        $data = WechatOrder::with('follow')
+            ->with('returns')
+            ->where(function ($query) use ($status) {
+                switch ($status) {
+                    case 'returning':
+                        $query->where('order_status', '=', 50);
+                        break;
+                    case 'returned':
+                        $query->where('order_status', '=', 60);
+                        break;
+                }
+            })->paginate(5);
+        return view('admin.order.return')->with([
+            'data' => $data,
+            'status' => $status,
+            'return' => $return
+        ]);
+
+    }
+
+    public function toreturn($id)
+    {
+        $order = WechatOrder::findOrFail($id);
+        if (empty($order)){
+            return redirect()->back()->withErrors('订单不存在！');
+        }else{
+            $order->order_status = 60;
+            $follow = WechatFollow::where('openid','=',$order->openid)->first();
+            $money = $follow->money;
+            $follow->money = $money + $order->order_amount;
+            if ($order->save() and $follow->save()){
+                return redirect()->back()->withSuccess('已同意退货退款');
+            }
+        }
     }
 
 }
