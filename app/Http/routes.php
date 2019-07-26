@@ -129,4 +129,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'web', 'namespace' => 'Api'], f
     Route::get('testreturn/{id}', 'ReturnController@testreturn');
     // 保存退货原因
     Route::post('return/{id}', 'ReturnController@storeReturn');
+    // 申请成为入驻商家
+    Route::post('merch/register', 'MerchController@register');
+    Route::post('merch/detail/{id}', 'MerchController@detail');
 });

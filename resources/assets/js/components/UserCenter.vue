@@ -8,6 +8,9 @@
             <mt-cell title="余额">&yen;{{data.money}}
                 <img slot="icon" src="/images/icon/uc-address.png" width="24" height="24">
             </mt-cell>
+            <mt-cell title="申请成为入驻商家" is-link v-link="{name:'merch-apply'}">
+                <img slot="icon" src="/images/icon/uc-address.png" width="24" height="24">
+            </mt-cell>
         </div>
         <div class="nav-wrapper">
             <mt-cell title="全部订单" is-link v-link="{name:'order-list',params:{'type':'all'}}">

@@ -27,19 +27,23 @@ class HomeController extends BaseController
             //获取订单数据
             //获取今天订单数据
             $Todayorder = WechatOrder::where('pay_status', '=', '已支付')
+                                        ->where('order_status', '=', 10)
                                         ->whereBetween('created_at',[date("Y-m-d 00:00:00"),$now])
                                         ->get();
             //获取昨天订单数据
             $Yyday = date("Y-m-d 24:00:00",strtotime("-1 day"));
             $Yesterdayorder = WechatOrder::where('pay_status', '=', '已支付')
+                                            ->where('order_status', '=', 10)
                                             ->whereBetween('created_at',[$yesterday,$Yyday])
                                             ->get();
             //获取本月订单数据
             $Monthorder = WechatOrder::where('pay_status', '=', '已支付')
+                                        ->where('order_status', '=', 10)
                                         ->whereBetween('created_at',[date("Y-m-01 00:00:00"),$now])
                                         ->get();
             //获取历史订单数据
             $Allorder = WechatOrder::where('pay_status', '=', '已支付')
+                                      ->where('order_status', '=', 10)
                                       ->get();
 
             //获取用户数据

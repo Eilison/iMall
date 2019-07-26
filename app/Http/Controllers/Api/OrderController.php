@@ -219,13 +219,19 @@ class OrderController extends Controller
     {
         $order = WechatOrder::findOrFail($id);
         if ($order->ship_status = '未收货'){
+            return response()->json([
+                'code' => -1,
+                'message' => '该订单未发货，不能提前确认收货'
+            ]);
+        }elseif ($order->ship_status = '已发货'){
             $order->ship_status = '已收货';
             $order->save();
             return response()->json([
                 'code' => 0,
                 'message' => '已经确认收货'
             ]);
-        }else{
+        }
+        else{
             return response()->json([
                 'code' => -1,
                 'message' => '该订单已经收货'
